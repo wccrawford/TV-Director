@@ -33,7 +33,7 @@ class MainFrame < JFrame
 
 		@locations = ArrayList.new(['/home/william/downloads/complete/TV'])
 
-		setTitle("Hello Mirah")
+		setTitle("TV Director")
 		setSize(800,600)
 		setLocation(100,100)
 
