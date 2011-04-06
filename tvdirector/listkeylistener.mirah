@@ -20,11 +20,11 @@ class ListKeyListener < KeyAdapter
 		frame = getFrame(event)
 		list = frame.getList
 		currentLocation = frame.getCurrentLocation
-		selectedValue =  list.getSelectedValue.toString
+		file = File(list.getSelectedValue)
 
 		keycode = event.getKeyCode
 
-		file = File.new(currentLocation, selectedValue)
+#		file = File.new(currentLocation, selectedValue)
 
 		if keycode==10 then
 			execute frame, file
@@ -36,7 +36,7 @@ class ListKeyListener < KeyAdapter
 			previousDirectory frame
 		end
 		if keycode==8 then
-			delete frame, currentLocation, selectedValue
+			delete frame, currentLocation, file.getName
 		end
 	end
 

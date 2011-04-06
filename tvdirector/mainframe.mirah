@@ -42,6 +42,7 @@ class MainFrame < JFrame
 		panel = getContentPane
 		@listModel = DefaultListModel.new
 		@list = JList.new(@listModel)
+		@list.setCellRenderer TVListCellRenderer.new
 		listScroll = JScrollPane.new(@list)
 		panel.add(listScroll)
 		@list.addKeyListener(ListKeyListener.new)
@@ -76,11 +77,11 @@ class MainFrame < JFrame
 				subdir = File.new(getCurrentLocation, file.getName)
 				filelist = subdir.list extFilter
 				if filelist.length > 0 then
-					@listModel.addElement(file.getName)
+					@listModel.addElement(file)
 				end
 			elsif file.isFile then
 				if extFilter.accept(dir, file.getName) then
-					@listModel.addElement(file.getName)
+					@listModel.addElement(file)
 				end
 			end
 		}
