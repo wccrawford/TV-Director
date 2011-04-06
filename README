@@ -1,0 +1,1 @@
+TV Director is a small project written in Mirah for navigating video files on disk and launching them.  It is not intended to play the files directly, but rather to let your favorite application play them.  It will use any XBMC metadata located with the file if it exists.
