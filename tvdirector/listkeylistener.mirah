@@ -87,6 +87,8 @@ class ListKeyListener < KeyAdapter
 				Runtime.getRuntime().exec(cmd)
 			}
 
+			Thread.sleep(200)
+
 			frame.populateList
 		end
 	end
