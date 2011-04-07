@@ -5,12 +5,20 @@ package tvdirector
 
 class FileExtensionFilter
 	implements FilenameFilter
-	def initialize extension:String
-		@extension = extension
+	def initialize extensions:String[]
+		@extensions = extensions
 	end
 
 	def accept(dir:File, name:String)
-		return name.endsWith('.'+@extension)
+		acceptable = false
+
+		@extensions.each { |extension| 
+			if name.endsWith('.'+extension) then
+				acceptable = true
+			end
+		}
+
+		return acceptable
 	end
 end
 

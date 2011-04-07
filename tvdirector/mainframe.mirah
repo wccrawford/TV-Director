@@ -69,7 +69,11 @@ class MainFrame < JFrame
 		
 		dir = File.new(getCurrentLocation)
 
-		extFilter = FileExtensionFilter.new('mkv')
+		exts = String[2]
+		exts[0] = 'mkv'
+		exts[1] = 'avi'
+
+		extFilter = FileExtensionFilter.new(exts)
 
 		children = dir.listFiles
 		children.each { |file|
