@@ -5,3 +5,5 @@ As Mirah is a relatively new language, the code works around things that are mis
 To execute TVDirector, use the following command from its directory:
 
 mirah tvdirector.mirah tvdirector/*.mirah
+
+The first time you run TVDirector, it will create a .tvdirector file in your home directory with your home directory as the video directory.  You can manually edit this file to change that.

@@ -32,7 +32,19 @@ class MainFrame < JFrame
 	def initialize
 		super
 
-		@locations = ArrayList.new(['/home/william/downloads/complete/TV'])
+		@prop = java::util::Properties.new
+
+		propFile = File.new(System.getProperty('user.home'), '.tvdirector')
+		if propFile.isFile then
+			@prop.load(java::io::FileInputStream.new(propFile))
+		end
+
+		if @prop.getProperty('videodir') == nil then
+			@prop.setProperty('videodir', System.getProperty('user.home'))
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+		end
+
+		@locations = ArrayList.new([@prop.getProperty('videodir')])
 
 		setTitle("TV Director")
 		setSize(800,600)
@@ -60,6 +72,10 @@ class MainFrame < JFrame
 		@list.addListSelectionListener TVListSelectionListener.new
 		
 		populateList
+	end
+
+	def getProperties
+		return @prop
 	end
 
 	def getMainLabel
