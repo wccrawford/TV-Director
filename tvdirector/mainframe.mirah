@@ -3,9 +3,11 @@ import "javax.swing.JList"
 import "javax.swing.DefaultListModel"
 import "javax.swing.JScrollPane"
 import "javax.swing.JViewport"
+import "javax.swing.JLabel"
 import "javax.swing.JPanel"
 import "javax.swing.JLayeredPane"
 import "javax.swing.JRootPane"
+import "javax.swing.BoxLayout"
 import "java.awt.event.WindowAdapter"
 import "java.awt.event.WindowEvent"
 import "java.awt.event.KeyAdapter"
@@ -14,8 +16,7 @@ import "java.io.File"
 import "java.io.FilenameFilter"
 import "java.util.ArrayList"
 
-import "tvdirector.ListKeyListener"
-import "tvdirector.MainFrameListener"
+import "javax.swing.SwingConstants"
 
 package tvdirector
 
@@ -40,14 +41,29 @@ class MainFrame < JFrame
 		addWindowListener(MainFrameListener.new)
 
 		panel = getContentPane
+		panel.setLayout(BoxLayout.new(panel, BoxLayout.Y_AXIS))
+
+		@mainLabel = JLabel.new 
+		@mainLabel.setHorizontalAlignment SwingConstants.LEFT
+		panel.add(@mainLabel)
+
 		@listModel = DefaultListModel.new
 		@list = JList.new(@listModel)
 		@list.setCellRenderer TVListCellRenderer.new
+		@list.addKeyListener(ListKeyListener.new)
 		listScroll = JScrollPane.new(@list)
 		panel.add(listScroll)
-		@list.addKeyListener(ListKeyListener.new)
+
+
+		# No need to create a new class because there's only 1 abstract
+		# method for this listener
+		@list.addListSelectionListener TVListSelectionListener.new
 		
 		populateList
+	end
+
+	def getMainLabel
+		return @mainLabel
 	end
 
 	def getCurrentLocation
@@ -94,5 +110,6 @@ class MainFrame < JFrame
 		@list.setSelectedIndex(0)
 		@list.ensureIndexIsVisible(@list.getSelectedIndex)
 	end
+
 end
 
