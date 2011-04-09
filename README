@@ -1,3 +1,7 @@
 TV Director is a small project written in Mirah for navigating video files on disk and launching them.  It is not intended to play the files directly, but rather to let your favorite application play them.  It will use any XBMC metadata located with the file if it exists.
 
 As Mirah is a relatively new language, the code works around things that are missing or not yet understood by myself.  THis means the code isn't as nice as it could be, or as powerful.  This project is a work-in-progress.
+
+To execute TVDirector, use the following command from its directory:
+
+mirah tvdirector.mirah tvdirector/*.mirah
