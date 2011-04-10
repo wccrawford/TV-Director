@@ -37,9 +37,8 @@ class TVListCellRenderer < DefaultListCellRenderer
 #			end
 #		end
 
-		setText(file.getName)
-
-		setBackground(isSelected ? Color.cyan : Color.white)
+		# Let the default renderer handle the text and background color, etc.
+		super(list, Object(file.getName), index, isSelected, cellHasFocus)
 
 		return self
 	end
