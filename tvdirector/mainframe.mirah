@@ -13,6 +13,7 @@ import "java.awt.event.WindowEvent"
 import "java.awt.event.KeyAdapter"
 import "java.awt.event.KeyEvent"
 import "java.io.File"
+import "java.io.FileFilter"
 import "java.io.FilenameFilter"
 import "java.util.ArrayList"
 
@@ -110,9 +111,7 @@ class MainFrame < JFrame
 		children = dir.listFiles
 		children.each { |file|
 			if file.isDirectory then
-				subdir = File.new(getCurrentLocation, file.getName)
-				filelist = subdir.list extFilter
-				if filelist.length > 0 then
+				if shouldShowDirectory file then
 					@listModel.addElement(file)
 				end
 			elsif file.isFile then
@@ -127,5 +126,27 @@ class MainFrame < JFrame
 		@list.ensureIndexIsVisible(@list.getSelectedIndex)
 	end
 
+	def shouldShowDirectory directory:File
+		exts = String[2]
+		exts[0] = 'mkv'
+		exts[1] = 'avi'
+
+		extFilter = FileExtensionFilter.new(exts)
+		subdir = File.new(getCurrentLocation, directory.getName)
+		filelist = subdir.list extFilter
+		if filelist.length > 0 then
+			return true
+		end
+
+		filelist = subdir.list { |file, name|
+			subfile = File.new(file, name)
+			return subfile.isDirectory
+		}
+		if filelist.length > 0 then
+			return true
+		end
+
+		return false
+	end
 end
 
