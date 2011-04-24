@@ -27,10 +27,10 @@ class FileData
 				
 			nfoFile = File.new(baseName+".nfo")
 
-#			begin
+			begin
 				parseXmlFile nfoFile
-#			rescue
-#			end
+			rescue
+			end
 #		elsif file.isDirectory then
 		end
 
