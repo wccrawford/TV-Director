@@ -9,12 +9,9 @@ import "java.awt.Color"
 package tvdirector
 
 class TVListCellRenderer < DefaultListCellRenderer
-#	def initialize
-#		@icon = ImageIcon.new
-#	end
-
 	def getListCellRendererComponent(list:JList, value:Object, index:int, isSelected:boolean, cellHasFocus:boolean)
-		file = File(value)
+		fileData = FileData(value)
+		file = File(fileData.get('file'))
 
 		setIcon(nil)
 

@@ -11,6 +11,7 @@ import "java.util.HashMap"
 package tvdirector
 
 class FileData
+	implements Comparable
 	def initialize
 		@fileData = Collections.synchronizedMap HashMap.new
 	end
@@ -32,35 +33,65 @@ class FileData
 #			end
 #		elsif file.isDirectory then
 		end
+
+		@fileData.put('file', file)
 	end
 	
 	def parseXmlFile file:File
-		dbFactory = DocumentBuilderFactory.newInstance
-		dBuilder = dbFactory.newDocumentBuilder
-		doc = dBuilder.parse file
-		doc.getDocumentElement.normalize
+		if(file.isFile) then
+			dbFactory = DocumentBuilderFactory.newInstance
+			dBuilder = dbFactory.newDocumentBuilder
+			doc = dBuilder.parse file
+			doc.getDocumentElement.normalize
 
-		root = doc.getDocumentElement
+			root = doc.getDocumentElement
 
-		nodes = root.getChildNodes
-#		print nodes.getLength
-		nodes.getLength.times { |index|
-#		for (index = 0, index < nodes.length, index+=1) {
-			if(nodes.item(index).getNodeType() == Node.ELEMENT_NODE) then
-				Element element = Element(nodes.item(index))
+			nodes = root.getChildNodes
+			nodes.getLength.times { |index|
+				if(nodes.item(index).getNodeType() == Node.ELEMENT_NODE) then
+					Element element = Element(nodes.item(index))
 
-#				print Integer.toString(index) + "\n"
-#				print element.toString + "\n"
-#				print element.getNodeValue + "\n"
-#				print element.getTagName + "\n"
-				Node valueNode = element.getChildNodes.item(0)
-				if(valueNode != null) then
-#					print valueNode.getNodeValue + "\n"
-					@fileData.put(element.getTagName, valueNode.getNodeValue)
+					Node valueNode = element.getChildNodes.item(0)
+					if(valueNode != null) then
+						@fileData.put(element.getTagName, valueNode.getNodeValue)
+					end
 				end
-			end
-		}
+			}
+		end
+	end
 
-		@fileData.put('file', file);
+	def get(name:string)
+		return @fileData.get(name)
+	end
+
+	def compareTo object:Object
+		begin
+			return compareTo FileData(object)
+		rescue
+			return 0
+		end
+	end
+
+	def compareTo df:FileData
+		return compareEpisodeTo(df)
+	end
+
+	def compareEpisodeTo df:FileData
+		int episodeA = 0
+		int episodeB = 0
+		if (string(get('episode')) != nil)  then
+			episodeA = Integer.parseInt(string(get('episode')))
+		end
+		if (string(df.get('episode')) != nil)  then
+			episodeB = Integer.parseInt(string(df.get('episode')))
+		end
+
+		if (episodeA < episodeB) then
+			return -1
+		elsif (episodeA > episodeB) then
+			return 1
+		end
+
+		return 0
 	end
 end

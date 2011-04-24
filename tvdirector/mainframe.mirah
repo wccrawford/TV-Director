@@ -16,7 +16,7 @@ import "java.io.File"
 import "java.io.FileFilter"
 import "java.io.FilenameFilter"
 import "java.util.ArrayList"
-import "java.util.List"
+import "java.util.Arrays"
 import "java.util.Collections"
 import "java.util.HashMap"
 
@@ -72,10 +72,7 @@ class MainFrame < JFrame
 		listScroll = JScrollPane.new(@list)
 		panel.add(listScroll)
 
-
-		# No need to create a new class because there's only 1 abstract
-		# method for this listener
-		@list.addListSelectionListener TVListSelectionListener.new
+#		@list.addListSelectionListener TVListSelectionListener.new
 		
 		populateList
 	end
@@ -117,25 +114,26 @@ class MainFrame < JFrame
 		children.each { |file|
 			if file.isDirectory then
 				if shouldShowDirectory file then
-					@listModel.addElement(file)
+					@listModel.addElement(getFileMetadata file)
 				end
 			elsif file.isFile then
 				if extFilter.accept(dir, file.getName) then
-					getFileMetadata file
-					@listModel.addElement(file)
+					@listModel.addElement(getFileMetadata file)
 				end
 			end
+		}
+
+		lmArray = @listModel.toArray
+		Arrays.sort lmArray
+
+		@listModel.clear
+		lmArray.each { |object|
+			@listModel.addElement(object)
 		}
 
 		@list.requestFocus
 		@list.setSelectedIndex(0)
 		@list.ensureIndexIsVisible(@list.getSelectedIndex)
-
-		sorted = Collections.sort(List(@listModel))
-
-		sorted.list.each { |object|
-			@listModel.addElement(object)
-		}
 	end
 
 	def shouldShowDirectory directory:File
@@ -162,9 +160,13 @@ class MainFrame < JFrame
 	end
 
 	def getFileMetadata file:File
-		fileData = FileData.new(file)
+		fileData = @fileData.get(file.getName)
+		if(fileData == nil) then
+			fileData = FileData.new(file)
+			@fileData.put(file.getName, fileData)
+		end
 
-		@fileData.put(file.getName, fileData)
+		return fileData
 	end
 end
 

@@ -27,7 +27,9 @@ class TVListSelectionListener
 		list = JList(event.getSource)
 
 		if(list.getSelectedValue != nil ) then
-			file = File(list.getSelectedValue)
+			fileData = FileData(list.getSelectedValue)
+
+			file = File(fileData.get('file'))
 
 			label.setText file.getName
 			label.setIcon nil

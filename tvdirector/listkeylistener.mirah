@@ -20,7 +20,8 @@ class ListKeyListener < KeyAdapter
 		frame = getFrame(event)
 		list = frame.getList
 		currentLocation = frame.getCurrentLocation
-		file = File(list.getSelectedValue)
+		fileData = FileData(list.getSelectedValue)
+		file = File(fileData.get('file'))
 
 		keycode = event.getKeyCode
 
