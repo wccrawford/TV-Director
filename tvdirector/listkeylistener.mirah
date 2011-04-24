@@ -81,7 +81,6 @@ class ListKeyListener < KeyAdapter
 			filelist = dir.listFiles baseFilter
 			
 			filelist.each { |subfile|
-				print subfile.toString + "\n"
 				cmd = String[2]
 				cmd[0] = 'trash'
 				cmd[1] = subfile.toString

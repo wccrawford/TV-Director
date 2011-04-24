@@ -31,7 +31,15 @@ class TVListSelectionListener
 
 			file = File(fileData.get('file'))
 
-			label.setText file.getName
+			title = String(fileData.get('title'))
+			title = String(file.getName) if title == nil
+
+			plot = String(fileData.get('plot'))
+
+			text = title
+			text = text + "<br/><br/>" + plot if plot != nil
+			
+			label.setText "<html>" + text + "</html>"
 			label.setIcon nil
 
 			if (file.isFile) then

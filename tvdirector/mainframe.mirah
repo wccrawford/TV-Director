@@ -72,7 +72,7 @@ class MainFrame < JFrame
 		listScroll = JScrollPane.new(@list)
 		panel.add(listScroll)
 
-#		@list.addListSelectionListener TVListSelectionListener.new
+		@list.addListSelectionListener TVListSelectionListener.new
 		
 		populateList
 	end
