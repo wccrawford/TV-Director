@@ -73,7 +73,13 @@ class FileData
 	end
 
 	def compareTo df:FileData
-		return compareEpisodeTo(df)
+		season = compareSeasonTo df
+		return season if(season != 0)
+
+		episode = compareEpisodeTo df
+		return episode if(episode != 0)
+
+		return compareNameTo(df)
 	end
 
 	def compareEpisodeTo df:FileData
@@ -93,5 +99,35 @@ class FileData
 		end
 
 		return 0
+	end
+
+	def compareSeasonTo df:FileData
+		int seasonA = 0
+		int seasonB = 0
+		if (string(get('season')) != nil)  then
+			seasonA = Integer.parseInt(string(get('season')))
+		end
+		if (string(df.get('season')) != nil)  then
+			seasonB = Integer.parseInt(string(df.get('season')))
+		end
+
+		if (seasonA < seasonB) then
+			return -1
+		elsif (seasonA > seasonB) then
+			return 1
+		end
+
+		return 0
+	end
+
+
+	def compareNameTo df:FileData
+		fileA = File(get('file'))
+		fileB = File(df.get('file'))
+
+		String nameA = fileA.getName
+		String nameB = fileB.getName
+
+		return nameA.compareTo(nameB)
 	end
 end
