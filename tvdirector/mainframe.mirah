@@ -16,6 +16,9 @@ import "java.io.File"
 import "java.io.FileFilter"
 import "java.io.FilenameFilter"
 import "java.util.ArrayList"
+import "java.util.List"
+import "java.util.Collections"
+import "java.util.HashMap"
 
 import "javax.swing.SwingConstants"
 
@@ -46,6 +49,8 @@ class MainFrame < JFrame
 		end
 
 		@locations = ArrayList.new([@prop.getProperty('videodir')])
+
+		@fileData = Collections.synchronizedMap HashMap.new
 
 		setTitle("TV Director")
 		setSize(800,600)
@@ -116,6 +121,7 @@ class MainFrame < JFrame
 				end
 			elsif file.isFile then
 				if extFilter.accept(dir, file.getName) then
+					getFileMetadata file
 					@listModel.addElement(file)
 				end
 			end
@@ -124,6 +130,12 @@ class MainFrame < JFrame
 		@list.requestFocus
 		@list.setSelectedIndex(0)
 		@list.ensureIndexIsVisible(@list.getSelectedIndex)
+
+		sorted = Collections.sort(List(@listModel))
+
+		sorted.list.each { |object|
+			@listModel.addElement(object)
+		}
 	end
 
 	def shouldShowDirectory directory:File
@@ -147,6 +159,12 @@ class MainFrame < JFrame
 		end
 
 		return false
+	end
+
+	def getFileMetadata file:File
+		fileData = FileData.new(file)
+
+		@fileData.put(file.getName, fileData)
 	end
 end
 
