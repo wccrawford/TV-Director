@@ -46,18 +46,36 @@ class FileData
 
 			root = doc.getDocumentElement
 
-			nodes = root.getChildNodes
-			nodes.getLength.times { |index|
-				if(nodes.item(index).getNodeType() == Node.ELEMENT_NODE) then
-					Element element = Element(nodes.item(index))
+			if(root.getTagName == 'episodedetails') then
+				parseXmlEpisodeDetailsElement root
+			else
+				parseXmlXbmcMultiEpisodeElement root
+			end
 
-					Node valueNode = element.getChildNodes.item(0)
-					if(valueNode != null) then
-						@fileData.put(element.getTagName, valueNode.getNodeValue)
-					end
-				end
-			}
 		end
+	end
+
+	def parseXmlXbmcMultiEpisodeElement element:Element
+		nodes = element.getChildNodes
+		nodes.getLength.times { |index|
+			if(nodes.item(index).getNodeType() == Node.ELEMENT_NODE) then
+				Element child = Element(nodes.item(index))
+
+				return parseXmlEpisodeDetailsElement child if (child.getTagName == 'episodedetails')
+			end
+		}
+	end
+
+	def parseXmlEpisodeDetailsElement element:Element
+		nodes = element.getChildNodes
+		nodes.getLength.times { |index|
+			if(nodes.item(index).getNodeType() == Node.ELEMENT_NODE) then
+				Element element = Element(nodes.item(index))
+
+				Node valueNode = element.getChildNodes.item(0)
+				@fileData.put(element.getTagName, valueNode.getNodeValue) if(valueNode != null)
+			end
+		}
 	end
 
 	def get(name:string)
@@ -85,18 +103,12 @@ class FileData
 	def compareEpisodeTo df:FileData
 		int episodeA = 0
 		int episodeB = 0
-		if (string(get('episode')) != nil)  then
-			episodeA = Integer.parseInt(string(get('episode')))
-		end
-		if (string(df.get('episode')) != nil)  then
-			episodeB = Integer.parseInt(string(df.get('episode')))
-		end
 
-		if (episodeA < episodeB) then
-			return -1
-		elsif (episodeA > episodeB) then
-			return 1
-		end
+		episodeA = Integer.parseInt(string(get('episode'))) if (string(get('episode')) != nil)
+		episodeB = Integer.parseInt(string(df.get('episode'))) if (string(df.get('episode')) != nil)
+
+		return -1 if (episodeA < episodeB)
+		return 1 if (episodeA > episodeB)
 
 		return 0
 	end
@@ -104,18 +116,12 @@ class FileData
 	def compareSeasonTo df:FileData
 		int seasonA = 0
 		int seasonB = 0
-		if (string(get('season')) != nil)  then
-			seasonA = Integer.parseInt(string(get('season')))
-		end
-		if (string(df.get('season')) != nil)  then
-			seasonB = Integer.parseInt(string(df.get('season')))
-		end
 
-		if (seasonA < seasonB) then
-			return -1
-		elsif (seasonA > seasonB) then
-			return 1
-		end
+		seasonA = Integer.parseInt(string(get('season'))) if (string(get('season')) != nil)
+		seasonB = Integer.parseInt(string(df.get('season'))) if (string(df.get('season')) != nil)
+
+		return -1 if (seasonA < seasonB)
+		return 1 if (seasonA > seasonB)
 
 		return 0
 	end
