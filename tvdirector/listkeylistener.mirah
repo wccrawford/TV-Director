@@ -16,51 +16,41 @@ import "java.io.File"
 package tvdirector
 
 class ListKeyListener < KeyAdapter
-	def keyPressed(event)
-		frame = getFrame(event)
+	def keyPressed event
+		frame = getFrame event
 		list = frame.getList
 		currentLocation = frame.getCurrentLocation
 		fileData = FileData(list.getSelectedValue)
-		file = File(fileData.get('file'))
+		file = File(fileData.get 'file')
 
 		keycode = event.getKeyCode
 
-#		file = File.new(currentLocation, selectedValue)
-
-		if keycode==10 then
-			execute frame, file
-		end
-		if keycode==39 then
-			nextDirectory frame, file
-		end
-		if keycode==37 then
-			previousDirectory frame
-		end
-		if keycode==8 then
-			delete frame, currentLocation, file.getName
-		end
+		execute frame, file	if keycode==10
+		nextDirectory frame, file if keycode==39
+		previousDirectory frame if keycode==37
+		delete frame, currentLocation, file.getName if keycode==8
 	end
 
-	def execute(frame:MainFrame, file:File)
+	def execute frame:MainFrame, file:File
 		if file.isFile then
 			cmd = String[2]
 			cmd[0] = 'xdg-open'
 			cmd[1] = file.toString
-			Runtime.getRuntime().exec(cmd)
+			Runtime.getRuntime.exec cmd
 		end
 	end
 
-	def nextDirectory(frame:MainFrame, file:File)
+	def nextDirectory frame:MainFrame, file:File
 		if file.isDirectory then
 			list = frame.getList
 
-			frame.addLocation(file.toString)
+			frame.addLocation file.toString
 
 			frame.populateList
 		end	
 	end
 
-	def previousDirectory(frame:MainFrame)
+	def previousDirectory frame:MainFrame
 		list = frame.getList
 
 		frame.removeLastLocation
@@ -68,11 +58,11 @@ class ListKeyListener < KeyAdapter
 		frame.populateList
 	end
 
-	def delete(frame:MainFrame, currentLocation:String, selectedValue:String)
-		dir = File.new(currentLocation)
-		file = File.new(currentLocation, selectedValue)
+	def delete frame:MainFrame, currentLocation:String, selectedValue:String
+		dir = File.new currentLocation
+		file = File.new currentLocation, selectedValue
 
-		if(file.isFile) then
+		if file.isFile then
 			# Remove extension
 			baseName = selectedValue.substring(0, selectedValue.length-4)
 
@@ -84,16 +74,16 @@ class ListKeyListener < KeyAdapter
 				cmd = String[2]
 				cmd[0] = 'trash'
 				cmd[1] = subfile.toString
-				Runtime.getRuntime().exec(cmd)
+				Runtime.getRuntime.exec cmd
 			}
 
-			Thread.sleep(200)
+			Thread.sleep 200
 
 			frame.populateList
 		end
 	end
 
-	def getFrame(event:KeyEvent)
+	def getFrame event:KeyEvent
 		list = JList(event.getSource)
 		viewport = JViewport(list.getParent)
 		scrollpane = JScrollPane(viewport.getParent)

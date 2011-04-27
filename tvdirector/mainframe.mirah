@@ -39,9 +39,7 @@ class MainFrame < JFrame
 		@prop = java::util::Properties.new
 
 		propFile = File.new(System.getProperty('user.home'), '.tvdirector')
-		if propFile.isFile then
-			@prop.load(java::io::FileInputStream.new(propFile))
-		end
+		@prop.load(java::io::FileInputStream.new(propFile)) if propFile.isFile
 
 		if @prop.getProperty('videodir') == nil then
 			@prop.setProperty('videodir', System.getProperty('user.home'))
@@ -90,36 +88,30 @@ class MainFrame < JFrame
 	end
 
 	def addLocation(location:String)
-		@locations.add(location)
+		@locations.add location
 	end
 
-	def removeLastLocation()
-		if @locations.size > 1 then
-			@locations.remove(@locations.size - 1)
-		end
+	def removeLastLocation
+		@locations.remove(@locations.size - 1) if @locations.size > 1
 	end
 
 	def populateList
 		@listModel.clear
 		
-		dir = File.new(getCurrentLocation)
+		dir = File.new getCurrentLocation
 
 		exts = String[2]
 		exts[0] = 'mkv'
 		exts[1] = 'avi'
 
-		extFilter = FileExtensionFilter.new(exts)
+		extFilter = FileExtensionFilter.new exts
 
 		children = dir.listFiles
 		children.each { |file|
 			if file.isDirectory then
-				if shouldShowDirectory file then
-					@listModel.addElement(getFileMetadata file)
-				end
+				@listModel.addElement(getFileMetadata file)	if shouldShowDirectory file
 			elsif file.isFile then
-				if extFilter.accept(dir, file.getName) then
-					@listModel.addElement(getFileMetadata file)
-				end
+				@listModel.addElement(getFileMetadata file) if extFilter.accept(dir, file.getName)
 			end
 		}
 
@@ -144,18 +136,14 @@ class MainFrame < JFrame
 		extFilter = FileExtensionFilter.new(exts)
 		subdir = File.new(getCurrentLocation, directory.getName)
 		filelist = subdir.list extFilter
-		if filelist.length > 0 then
-			return true
-		end
+		return true	if filelist.length > 0
 
 		filelist = subdir.list { |file, name|
 			subfile = File.new(file, name)
 			return subfile.isDirectory
 		}
-		if filelist.length > 0 then
-			return true
-		end
 
+		return true if filelist.length > 0
 		return false
 	end
 

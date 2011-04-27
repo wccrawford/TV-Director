@@ -13,9 +13,7 @@ class FileExtensionFilter
 		acceptable = false
 
 		@extensions.each { |extension| 
-			if name.endsWith('.'+extension) then
-				acceptable = true
-			end
+			acceptable = true if name.endsWith('.'+extension)
 		}
 
 		return acceptable
