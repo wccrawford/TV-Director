@@ -19,16 +19,22 @@ class ListKeyListener < KeyAdapter
 	def keyPressed event
 		frame = getFrame event
 		list = frame.getList
-		currentLocation = frame.getCurrentLocation
-		fileData = FileData(list.getSelectedValue)
-		file = File(fileData.get 'file')
 
 		keycode = event.getKeyCode
 
-		execute frame, file	if keycode==10
-		nextDirectory frame, file if keycode==39
 		previousDirectory frame if keycode==37
-		delete frame, currentLocation, file.getName if keycode==8
+
+		currentLocation = frame.getCurrentLocation
+
+		# The rest of these don't work if there's no current selection
+		unless list.getSelectedValue == nil then
+			fileData = FileData(list.getSelectedValue)
+			file = File(fileData.get 'file')
+
+			execute frame, file	if keycode==10
+			nextDirectory frame, file if keycode==39
+			delete frame, currentLocation, file.getName if keycode==8
+		end
 	end
 
 	def execute frame:MainFrame, file:File
