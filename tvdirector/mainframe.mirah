@@ -36,6 +36,7 @@ class MainFrame < JFrame
 	def initialize
 		super
 
+		# Set up properties file
 		@prop = java::util::Properties.new
 
 		propFile = File.new(System.getProperty('user.home'), '.tvdirector')
@@ -46,7 +47,7 @@ class MainFrame < JFrame
 			@prop.store(java::io::FileOutputStream.new(propFile), null)
 		end
 
-		@locations = ArrayList.new([@prop.getProperty('videodir')])
+		@locations = ArrayList.new([getProperty('videodir', System.getProperty('user.home'))])
 
 		@fileData = Collections.synchronizedMap HashMap.new
 
@@ -100,11 +101,7 @@ class MainFrame < JFrame
 		
 		dir = File.new getCurrentLocation
 
-		exts = String[2]
-		exts[0] = 'mkv'
-		exts[1] = 'avi'
-
-		extFilter = FileExtensionFilter.new exts
+		extFilter = FileExtensionFilter.new allowedFileExtensions
 
 		children = dir.listFiles
 		children.each { |file|
@@ -129,11 +126,7 @@ class MainFrame < JFrame
 	end
 
 	def shouldShowDirectory directory:File
-		exts = String[2]
-		exts[0] = 'mkv'
-		exts[1] = 'avi'
-
-		extFilter = FileExtensionFilter.new(exts)
+		extFilter = FileExtensionFilter.new(allowedFileExtensions)
 		subdir = File.new(getCurrentLocation, directory.getName)
 		filelist = subdir.list extFilter
 		return true	if filelist.length > 0
@@ -155,6 +148,24 @@ class MainFrame < JFrame
 		end
 
 		return fileData
+	end
+
+	def allowedFileExtensions
+		extensions = getProperty('extensions', 'avi|mkv')
+
+		return extensions.split '\\|'
+	end
+
+	def getProperty name:String, default:String
+		prop = @prop.getProperty(name)
+		if prop == nil then
+			@prop.setProperty(name, default)
+			propFile = File.new(System.getProperty('user.home'), '.tvdirector')
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+			prop = default
+		end
+
+		return prop
 	end
 end
 
