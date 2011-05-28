@@ -69,6 +69,9 @@ class ListKeyListener < KeyAdapter
 		file = File.new currentLocation, selectedValue
 
 		if file.isFile then
+			metadata = FileData(frame.getFileMetadata(file))
+			metadata.put('deleted', 'true') # Set it as deleted so that it won't be populated in the list
+
 			# Remove extension
 			baseName = selectedValue.substring(0, selectedValue.length-4)
 
@@ -83,9 +86,9 @@ class ListKeyListener < KeyAdapter
 				Runtime.getRuntime.exec cmd
 			}
 
-			Thread.sleep 200
-
 			frame.populateList
+			
+			metadata.put('deleted', 'false') # In case it is un-deleted later.
 		end
 	end
 

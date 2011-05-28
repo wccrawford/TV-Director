@@ -72,7 +72,7 @@ class MainFrame < JFrame
 		panel.add(listScroll)
 
 		@list.addListSelectionListener TVListSelectionListener.new
-		
+
 		populateList
 	end
 
@@ -102,13 +102,15 @@ class MainFrame < JFrame
 		dir = File.new getCurrentLocation
 
 		extFilter = FileExtensionFilter.new allowedFileExtensions
-
 		children = dir.listFiles
 		children.each { |file|
 			if file.isDirectory then
 				@listModel.addElement(getFileMetadata file)	if shouldShowDirectory file
 			elsif file.isFile then
-				@listModel.addElement(getFileMetadata file) if extFilter.accept(dir, file.getName)
+				metadata = FileData(getFileMetadata(file))
+				unless metadata.get('deleted') == 'true' then
+					@listModel.addElement(getFileMetadata file) if extFilter.accept(dir, file.getName)
+				end
 			end
 		}
 

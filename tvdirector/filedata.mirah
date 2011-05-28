@@ -31,10 +31,12 @@ class FileData
 				parseXmlFile nfoFile
 			rescue
 			end
+
 #		elsif file.isDirectory then
 		end
 
-		@fileData.put('file', file)
+		put('deleted', 'false')
+		put('file', file)
 	end
 	
 	def parseXmlFile file:File
@@ -78,8 +80,12 @@ class FileData
 		}
 	end
 
-	def get(name:string)
+	def get(name:String)
 		return @fileData.get(name)
+	end
+
+	def put(name:String, value:Object)
+		@fileData.put(name, value)
 	end
 
 	def compareTo object:Object
