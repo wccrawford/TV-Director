@@ -67,6 +67,8 @@ class ListKeyListener < KeyAdapter
 	def delete frame:MainFrame, currentLocation:String, selectedValue:String
 		dir = File.new currentLocation
 		file = File.new currentLocation, selectedValue
+		list = frame.getList
+		selectedIndex = list.getSelectedIndex
 
 		if file.isFile then
 			metadata = FileData(frame.getFileMetadata(file))
@@ -86,7 +88,7 @@ class ListKeyListener < KeyAdapter
 				Runtime.getRuntime.exec cmd
 			}
 
-			frame.populateList
+			frame.populateList selectedIndex
 			
 			metadata.put('deleted', 'false') # In case it is un-deleted later.
 		end

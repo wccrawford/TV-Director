@@ -96,7 +96,7 @@ class MainFrame < JFrame
 		@locations.remove(@locations.size - 1) if @locations.size > 1
 	end
 
-	def populateList
+	def populateList selectedIndex=0
 		@listModel.clear
 		
 		dir = File.new getCurrentLocation
@@ -123,7 +123,9 @@ class MainFrame < JFrame
 		}
 
 		@list.requestFocus
-		@list.setSelectedIndex(0)
+		listSize = @listModel.getSize
+		selectedIndex = listSize if selectedIndex > listSize
+		@list.setSelectedIndex(selectedIndex)
 		@list.ensureIndexIsVisible(@list.getSelectedIndex)
 	end
 
