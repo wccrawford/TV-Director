@@ -36,17 +36,8 @@ class MainFrame < JFrame
 	def initialize
 		super
 
-		# Set up properties file
-		@prop = java::util::Properties.new
-
-		propFile = File.new(System.getProperty('user.home'), '.tvdirector')
-		@prop.load(java::io::FileInputStream.new(propFile)) if propFile.isFile
-
-		if @prop.getProperty('videodir') == nil then
-			@prop.setProperty('videodir', System.getProperty('user.home'))
-			@prop.store(java::io::FileOutputStream.new(propFile), null)
-		end
-
+		loadPropFile
+		
 		@locations = ArrayList.new([getProperty('videodir', System.getProperty('user.home'))])
 
 		@fileData = Collections.synchronizedMap HashMap.new
@@ -74,6 +65,24 @@ class MainFrame < JFrame
 		@list.addListSelectionListener TVListSelectionListener.new
 
 		populateList
+	end
+
+	def loadPropFile
+		# Set up properties file
+		@prop = java::util::Properties.new
+
+		propFile = File.new(System.getProperty('user.home'), '.tvdirector')
+		@prop.load(java::io::FileInputStream.new(propFile)) if propFile.isFile
+
+		if @prop.getProperty('videodir') == nil then
+			@prop.setProperty('videodir', System.getProperty('user.home'))
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+		end
+
+		if @prop.getProperty('removeSceneTags') == nil then
+			@prop.setProperty('removeSceneTags', 'false')
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+		end
 	end
 
 	def getProperties
@@ -115,7 +124,7 @@ class MainFrame < JFrame
 		}
 
 		lmArray = @listModel.toArray
-		Arrays.sort lmArray
+		Arrays.sort lmArray, FilenameComparator.new( @prop.getProperty('removeSceneTags').equals('true') )
 
 		@listModel.clear
 		lmArray.each { |object|
