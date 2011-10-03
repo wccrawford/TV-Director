@@ -154,10 +154,10 @@ class MainFrame < JFrame
 	end
 
 	def getFileMetadata file:File
-		fileData = @fileData.get(file.getName)
+		fileData = @fileData.get(file.getPath)
 		if(fileData == nil) then
 			fileData = FileData.new(file)
-			@fileData.put(file.getName, fileData)
+			@fileData.put(file.getPath, fileData)
 		end
 
 		return fileData
