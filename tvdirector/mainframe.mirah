@@ -83,6 +83,11 @@ class MainFrame < JFrame
 			@prop.setProperty('removeSceneTags', 'false')
 			@prop.store(java::io::FileOutputStream.new(propFile), null)
 		end
+
+		if @prop.getProperty('fontSize') == nil then
+			@prop.setProperty('fontSize', '14')
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+		end
 	end
 
 	def getProperties
@@ -130,6 +135,9 @@ class MainFrame < JFrame
 		lmArray.each { |object|
 			@listModel.addElement(object)
 		}
+
+		listFont = @list.getFont()
+		@list.setFont(java::awt::Font.new(listFont.getFontName(), listFont.getStyle(), Integer.parseInt(@prop.getProperty('fontSize'))))
 
 		@list.requestFocus
 		listSize = @listModel.getSize
