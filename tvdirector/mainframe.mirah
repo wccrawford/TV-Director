@@ -84,6 +84,11 @@ class MainFrame < JFrame
 			@prop.store(java::io::FileOutputStream.new(propFile), null)
 		end
 
+		if @prop.getProperty('underscoreAsSpace') == nil then
+			@prop.setProperty('underscoreAsSpace', 'false')
+			@prop.store(java::io::FileOutputStream.new(propFile), null)
+		end
+
 		if @prop.getProperty('fontSize') == nil then
 			@prop.setProperty('fontSize', '14')
 			@prop.store(java::io::FileOutputStream.new(propFile), null)
@@ -129,7 +134,7 @@ class MainFrame < JFrame
 		}
 
 		lmArray = @listModel.toArray
-		Arrays.sort lmArray, FilenameComparator.new( @prop.getProperty('removeSceneTags').equals('true') )
+		Arrays.sort lmArray, FilenameComparator.new( @prop.getProperty('removeSceneTags').equals('true'), @prop.getProperty('underscoreAsSpace').equals('true') )
 
 		@listModel.clear
 		lmArray.each { |object|

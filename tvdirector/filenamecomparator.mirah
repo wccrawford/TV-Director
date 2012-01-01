@@ -8,10 +8,12 @@ class FilenameComparator
 
 	def initialize
 		@removeSceneTags = false
+		@underscoreAsSpace = false
 	end
 
-	def initialize(removeSceneTags:boolean)
+	def initialize(removeSceneTags:boolean, underscoreAsSpace:boolean)
 		@removeSceneTags = removeSceneTags
+		@underscoreAsSpace = underscoreAsSpace
 	end
 
 	def compare (object1:String, object2:String)
@@ -23,11 +25,22 @@ class FilenameComparator
 			o2 = removeSceneTag o2
 		end
 
+		if(@underscoreAsSpace) then
+			o1 = underscoreToSpace o1
+			o2 = underscoreToSpace o2
+		end
+		print o1
+		print o2
+
 		o1.compareTo(o2)
 	end
 
 	def removeSceneTag(filename:String)
 		trimmedFilename = filename.replaceAll('^(/.*/)?[\[(][^\])]*[\])][ _]*', '');
+	end
+
+	def underscoreToSpace(filename:String)
+		trimmedFilename = filename.replaceAll('_', ' ');
 	end
 
 	def compare(object1:FileData, object2:FileData)
