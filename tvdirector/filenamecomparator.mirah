@@ -22,6 +22,9 @@ class FilenameComparator
 		o1 = String(object1)
 		o2 = String(object2)
 
+		o1 = removeDirectory o1
+		o2 = removeDirectory o2
+
 		if(@removeSceneTags) then
 			o1 = removeSceneTag o1
 			o2 = removeSceneTag o2
@@ -37,15 +40,23 @@ class FilenameComparator
 			o2 = o2.toLowerCase
 		end
 
+		print o1+"\n";
+		print o2+"\n\n";
+
 		o1.compareTo(o2)
 	end
 
+	def removeDirectory(filename:String)
+		filename = filename.replaceAll('^.*/', '');
+	end
+
 	def removeSceneTag(filename:String)
-		trimmedFilename = filename.replaceAll('^(/.*/)?[\[(][^\])]*[\])][ _]*', '');
+		filename = filename.replaceAll('^(/.*/)?[\[(][^\])]*[\])][ _]*', '');
 	end
 
 	def alternatesToSpaces(filename:String)
 		filename = filename.replaceAll('[_ -]+', ' ');
+		filename = filename.replaceAll('^ +', '');
 	end
 
 	def compare(object1:FileData, object2:FileData)
