@@ -40,9 +40,6 @@ class FilenameComparator
 			o2 = o2.toLowerCase
 		end
 
-		print o1+"\n";
-		print o2+"\n\n";
-
 		o1.compareTo(o2)
 	end
 
